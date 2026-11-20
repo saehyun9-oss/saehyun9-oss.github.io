@@ -1,0 +1,192 @@
+/* AI 시대, 교사의 시간 — style.css */
+:root{
+  --mint:#bfd5c6;
+  --ink:#1d2b2a;
+  --red:#e8231a;
+  --paper:#f7f3e6;
+  --cell-w:150px;
+  --cell-h:210px; /* keep in sync with CELL_H in script.js */
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:#0d1211;
+  font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic","Noto Sans KR",sans-serif;color:var(--ink)}
+button{font-family:inherit;cursor:pointer}
+.hidden{display:none!important}
+
+/* ---------- 무대 ---------- */
+#viewport{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+#stage{position:relative;width:1600px;height:900px;flex:none;background:var(--mint);overflow:hidden}
+
+/* ---------- 장면 / 단계 : 투명도로 부드럽게 전환 ---------- */
+.scene{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .6s ease,visibility 0s .6s}
+.scene.active{opacity:1;visibility:visible;transition:opacity .6s ease}
+.step{position:absolute;inset:0;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .5s ease,visibility 0s .5s}
+.step.active{opacity:1;visibility:visible;pointer-events:auto;transition:opacity .5s ease}
+.step.black{background:#000}
+
+/* ---------- 이미지 자리 ---------- */
+.pic{position:absolute;display:flex;align-items:center;justify-content:center}
+.pic img{width:100%;height:100%;object-fit:contain;display:block}
+.pic.cover img{object-fit:cover}
+.full{inset:0}
+.pic.missing,.crop.missing{background:rgba(255,255,255,.35);border:3px dashed rgba(29,43,42,.45);border-radius:10px}
+.crop{position:absolute;background-repeat:no-repeat;display:flex;align-items:center;justify-content:center}
+
+/* ---------- 글자 연출 ---------- */
+.lines>*{opacity:0}
+.lines.play>*{animation:rise .9s ease both}
+.lines.play>:nth-child(2){animation-delay:1.8s}
+.lines.play>:nth-child(3){animation-delay:3.4s}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+.lines.center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center}
+.lines.top{position:absolute;left:0;right:0;top:70px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+.lines.bottom{position:absolute;left:100px;right:100px;bottom:36px;display:flex;flex-direction:column;gap:14px}
+.lines.bottom-left{position:absolute;left:80px;bottom:60px;max-width:760px}
+.big{color:#fff;font-size:64px;font-weight:800;letter-spacing:-1px}
+.line{background:rgba(255,255,255,.92);border:4px solid var(--ink);border-radius:18px;padding:16px 28px;font-size:30px;font-weight:700;line-height:1.4}
+.line.big{color:var(--ink);font-size:46px;border-width:5px}
+.line.boss{align-self:flex-end;max-width:900px}
+.line.thought{align-self:flex-start;max-width:900px;border-style:dashed;background:rgba(255,255,255,.8)}
+.line.strong{background:var(--ink);color:#fff;font-size:38px}
+.card-text{padding:0 330px}
+
+.caption{position:absolute;left:0;right:0;top:60px;text-align:center;font-size:36px;font-weight:700;line-height:1.5;
+  background:rgba(255,255,255,.8);width:fit-content;margin:0 auto;padding:14px 34px;border-radius:16px}
+
+/* ---------- 걷는 캐릭터 ---------- */
+.walker{position:absolute}
+.walker .flipper,.walker .body{height:100%}
+.walker .flipper.flip{transform:scaleX(-1)}
+.walker .body>.pic{position:relative;height:100%;min-width:190px}
+.walker .body>.pic img{width:auto;height:100%}
+.walker.walking .body{animation:bob .45s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-10px)}}
+#walker{bottom:70px;height:480px;left:-18%}
+#t6{bottom:60px;height:640px;left:-400px}
+#t8{bottom:60px;height:640px;left:1700px}
+
+/* ---------- Scene2 ---------- */
+#s2-header{position:absolute;left:0;right:0;top:0;height:110px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 80px;background:var(--mint);z-index:2;box-shadow:0 6px 14px rgba(0,0,0,.1)}
+#s2-header h2{font-size:42px}
+#s2-right{display:flex;align-items:center;gap:24px}
+#s2-help{font-size:22px;opacity:.7}
+#count{font-size:28px;font-weight:800;background:var(--ink);color:#fff;padding:8px 22px;border-radius:30px}
+#s2-scroll{position:absolute;left:0;right:0;top:110px;bottom:0;overflow-y:auto;padding:30px 70px 150px}
+#grid{display:grid;grid-template-columns:repeat(4,1fr);gap:26px}
+.card{background:rgba(255,255,255,.55);border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:8px;
+  transition:transform .2s,box-shadow .2s,filter .8s,opacity .8s;cursor:pointer}
+.card.locked{cursor:default}
+.card:hover:not(.done):not(.locked){transform:translateY(-4px) scale(1.03);box-shadow:0 10px 22px rgba(0,0,0,.18)}
+.card.done{filter:grayscale(1);opacity:.6;cursor:default}
+.card .pair{display:flex;gap:12px}
+.card .name{font-weight:700;font-size:20px;text-align:center}
+.win{width:var(--cell-w);height:var(--cell-h);overflow:hidden;border-radius:8px;position:relative;background:#e9e3d2}
+.graph-win{background:var(--paper);border:2px solid #d8d2c0}
+.strip{position:absolute;left:0;top:0;width:100%;will-change:transform}
+.strip.spin{filter:blur(3px)}
+.cell{width:100%;height:var(--cell-h);position:relative;overflow:hidden}
+.cell.blank{background:var(--paper);border-bottom:2px solid #ddd6c2}
+.face{position:absolute;inset:0;background-repeat:no-repeat}
+.num{position:absolute;inset:0;display:none;align-items:center;justify-content:center;font-size:44px;font-weight:800;
+  background:hsl(var(--h),40%,80%)}
+#grid.nosheet .num{display:flex}
+#grid.nosheet .face{display:none}
+.graph{position:absolute;inset:0;width:100%;height:100%}
+.graph .line{fill:none;stroke:var(--red);stroke-width:6;stroke-linecap:square;stroke-linejoin:miter;
+  stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1.6s cubic-bezier(.4,0,.2,1)}
+.graph .line.draw{stroke-dashoffset:0}
+#finishBtn{position:absolute;left:50%;bottom:34px;transform:translateX(-50%);z-index:3;font-size:26px;font-weight:800;
+  padding:16px 40px;border:none;border-radius:40px;background:var(--red);color:#fff;box-shadow:0 8px 20px rgba(0,0,0,.3);
+  animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{50%{transform:translateX(-50%) scale(1.05)}}
+
+/* ---------- Scene3 ---------- */
+.layer{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .4s}
+.layer.show{opacity:1;visibility:visible}
+#bubble{position:absolute;left:30%;top:120px;width:440px;height:270px;background:#fff;border:5px solid var(--ink);
+  border-radius:50%/55%;transform:scale(0);transform-origin:85% 105%;transition:transform .7s cubic-bezier(.3,1.6,.5,1)}
+#bubble.show{transform:scale(1)}
+#bubble::after{content:"";position:absolute;right:50px;bottom:-34px;width:36px;height:36px;background:#fff;
+  border-right:5px solid var(--ink);border-bottom:5px solid var(--ink);transform:rotate(45deg) skew(10deg,10deg)}
+#s3-hint{position:absolute;left:50%;bottom:36px;transform:translateX(-50%);background:rgba(255,255,255,.9);padding:12px 28px;
+  border-radius:30px;font-size:24px;font-weight:700;opacity:0;transition:opacity .5s}
+#s3-hint.show{opacity:1}
+
+/* ---------- Scene4 ---------- */
+.thought{position:absolute;left:1000px;top:300px;width:480px;padding:34px 30px;background:#fff;border:5px solid var(--ink);
+  border-radius:50%/60%;text-align:center;font-size:30px;font-weight:700;line-height:1.5}
+.thought::before,.thought::after{content:"";position:absolute;background:#fff;border:4px solid var(--ink);border-radius:50%}
+.thought::before{width:34px;height:34px;left:70px;bottom:-44px}
+.thought::after{width:18px;height:18px;left:40px;bottom:-72px}
+
+/* ---------- Scene5 : 노트북 화면 위에 올리는 글 ---------- */
+/* Overlay aligned to the laptop screen in laptop.png */
+.lscreen{position:absolute;left:25.7%;top:9.8%;width:45.2%;height:51.6%;background:#fff;border-radius:4px;
+  padding:26px 34px;overflow:hidden;font-size:22px;line-height:1.5}
+.lscreen h3{font-size:28px;margin-bottom:14px;border-bottom:3px solid var(--ink);padding-bottom:8px}
+.results{list-style:none}
+.article{padding:12px 8px;border-bottom:1px solid #ddd;color:#1a0dab;cursor:pointer;font-size:24px}
+.article:hover{background:#eef3ff;text-decoration:underline}
+.lscreen.detail p{margin-top:14px}
+.mail{padding:12px;border-bottom:1px solid #ddd}
+.callout{margin-top:30px;background:var(--red);color:#fff;font-size:34px;font-weight:800;text-align:center;padding:18px;
+  border-radius:12px;animation:blink 1s ease-in-out infinite}
+@keyframes blink{50%{opacity:.45}}
+.choice{position:absolute;left:0;right:0;top:66%;text-align:center}
+.choice p{display:inline-block;background:rgba(255,255,255,.92);padding:8px 26px;border-radius:14px;font-size:32px;font-weight:800;margin-bottom:16px}
+.choice button{font-size:26px;font-weight:800;padding:14px 34px;margin:0 10px;border:4px solid var(--ink);border-radius:36px;
+  background:#fff;transition:transform .15s}
+.choice button:hover{transform:scale(1.07);background:var(--ink);color:#fff}
+
+/* ---------- Scene7 ---------- */
+.fig img{object-fit:contain}
+
+/* ---------- Scene10 ---------- */
+.desk-group{position:absolute;bottom:-40px;height:820px;aspect-ratio:1/2}
+.desk-group .dk{inset:0}
+.desk-group .person{top:16%;left:49%;width:30%;height:60%}
+.colleague{opacity:0;transition:opacity .9s}
+#scene10[data-step="1"] .colleague,#scene10[data-step="2"] .colleague{opacity:1}
+.sleeper{transform-origin:bottom center;transition:transform 1.4s ease}
+#scene10[data-step="2"] .sleeper{transform:rotate(7deg) translateY(24px)}
+#night{position:absolute;inset:0;background:#0b1530;opacity:.55;transition:opacity 1.4s;pointer-events:none}
+#scene10[data-step="1"] #night,#scene10[data-step="2"] #night{opacity:.06}
+
+/* ---------- Scene11 ---------- */
+#scene11{background:#cfe0d3}
+.float{animation:floaty 5s ease-in-out infinite}
+.float.f2{animation-duration:6.5s;animation-delay:-2s}
+@keyframes floaty{50%{transform:translateY(-16px) rotate(1.5deg)}}
+
+/* ---------- Scene12 ---------- */
+#restartBtn{position:absolute;right:60px;bottom:50px;font-size:22px;font-weight:700;padding:12px 26px;border-radius:30px;
+  border:3px solid var(--ink);background:rgba(255,255,255,.85)}
+
+/* ---------- 커튼 (페이드 인/아웃) ---------- */
+#curtain{position:absolute;inset:0;z-index:50;pointer-events:none;overflow:hidden}
+#curtain .panel{position:absolute;top:0;bottom:0;width:51%;opacity:0;
+  transition:transform .95s cubic-bezier(.65,0,.35,1),opacity .95s ease;
+  background:repeating-linear-gradient(90deg,#f6f7f5 0 70px,#e4e7e3 70px 112px,#f2f3f1 112px 190px,#dde1dc 190px 222px);
+  box-shadow:0 0 40px rgba(0,0,0,.25)}
+#curtain .panel::before{content:"";position:absolute;left:0;right:0;top:0;height:46px;
+  background:repeating-linear-gradient(90deg,transparent 0 34px,#26302f 34px 46px,transparent 46px 120px)}
+#curtain .left{left:0;transform:translateX(-102%)}
+#curtain .right{right:0;transform:translateX(102%)}
+#curtain.closed{pointer-events:auto}
+#curtain.closed .panel{opacity:1;transform:translateX(0)}
+#curtain .rod{position:absolute;left:0;right:0;top:0;height:34px;background:#26302f;opacity:0;transition:opacity .95s}
+#curtain.closed .rod{opacity:1}
+
+/* ---------- 안내 문구 / 이동 버튼 ---------- */
+#toast{position:absolute;left:50%;bottom:110px;transform:translateX(-50%) translateY(20px);z-index:70;background:rgba(0,0,0,.82);
+  color:#fff;padding:14px 30px;border-radius:30px;font-size:24px;opacity:0;pointer-events:none;transition:all .4s;white-space:nowrap}
+#toast.show{opacity:1;transform:translateX(-50%)}
+#nav{position:absolute;right:24px;bottom:24px;z-index:60;display:flex;gap:10px}
+#nav button{width:46px;height:46px;border-radius:50%;border:3px solid var(--ink);background:rgba(255,255,255,.9);
+  font-size:22px;font-weight:800;color:var(--ink);transition:opacity .2s,transform .15s}
+#nav button:hover{transform:scale(1.1)}
+#nav button.dim{opacity:.3}
+
+/* ---------- Inactive scenes must not capture clicks ---------- */
+.scene:not(.active),.scene:not(.active) *{pointer-events:none!important}
