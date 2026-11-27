@@ -162,7 +162,29 @@ async function showKnock(run) {
   await centerCard(slot);
   while (!slot.classList.contains("ready")) { await wait(200); if (!isCurrent(run)) return; }
   slot.classList.add("knock");
-  slot.querySelector(".ask-bubble").textContent = "똑똑, 교수님! 저도 면담할 수 있을까요?";
+  const HINT_LINES = {
+    1:  "잠깐만요, 교수님! 저 시간은 많아요. 지금 면담 되세요?",
+    2:  "저기… 교수님, 혹시 저도 면담할 수 있을까요…?",
+    3:  "교수님! 잠깐 시간 되세요? 저도 면담하고 싶어요!",
+    4:  "잠깐만요, 교수님! 저도 면담 일정 잡아 주실 수 있나요?",
+    5:  "잠시만요, 교수님. 여쭤볼 게 있는데, 저도 면담 가능할까요?",
+    6:  "교수님, 하나만 확인할게요. 저도 면담할 수 있나요?",
+    7:  "잠깐요, 교수님! 하하, 저도 면담 끼워 주실 수 있어요?",
+    8:  "잠깐만요, 교수님! 시험 얘기… 저도 면담할 수 있을까요?",
+    9:  "잠깐만요, 교수님! 저도요, 저도 면담해 주세요!",
+    10: "교수님, 잠깐 괜찮으세요? 저도 면담 부탁드려도 될까요?",
+    11: "교수님, 잠깐만요! 알바 가기 전에 면담 될까요?",
+    12: "잠깐만요, 교수님! 저도 고민이 있는데… 면담할 수 있을까요?",
+    13: "교수님, 잠깐요! 저도 면담 빨리 하고 갈게요!",
+    14: "잠시만요, 교수님. 저도 드릴 말씀이 있어요. 면담할 수 있을까요?",
+    15: "잠깐만요, 교수님! 시험 결과 때문에… 저도 면담 가능할까요?",
+    16: "교수님… 잠깐만요, 저도 면담할 수 있을까요? 하암…",
+    17: "잠깐만요, 교수님! 한도 풀리길 기다리다 왔어요. 저도 면담할 수 있을까요?",
+    18: "교수님, 잠깐만요! 다음 과제 넘어가기 전에 면담 될까요?",
+    19: "교수님, 잠깐 시간 괜찮으세요? 저도 면담하고 싶어요.",
+    20: "잠깐만요, 교수님! 주말엔 알바라서… 지금 면담할 수 있을까요?",
+  };
+  slot.querySelector(".ask-bubble").textContent = HINT_LINES[pick.number] || "잠깐, 교수님! 저도 면담할 수 있을까요?";
 }
 
 // 선택 창
@@ -481,7 +503,7 @@ async function scene7(el, run) {
   await playVideo(el, run, A + "video/s7.mp4",
     `<div class="speech tail-right" style="left:40px;top:28px;max-width:600px">
        <span class="who">학과장님</span>옆 연구실 교수는 AI 잘 써서 벌써 이번 주 일을 끝냈는데, 자네는 뭔가!
-     </div>`, 900, 4.2);
+     </div>`, 900, 3.2);
   if (!isCurrent(run)) return;
   await fadeToBlack();
   goToScene(8);
