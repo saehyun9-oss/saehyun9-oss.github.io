@@ -8,7 +8,9 @@ const STAGE_H = 816;
 const stage = document.getElementById("stage");
 
 function fitStage() {
-  const scale = Math.min(window.innerWidth / STAGE_W, window.innerHeight / STAGE_H);
+  const w = document.documentElement.clientWidth;
+  const h = document.documentElement.clientHeight;
+  const scale = Math.min(w / STAGE_W, h / STAGE_H);
   stage.style.transform = `translate(-50%, -50%) scale(${scale})`;
 }
 window.addEventListener("resize", fitStage);
