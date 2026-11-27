@@ -162,7 +162,7 @@ async function showKnock(run) {
   await centerCard(slot);
   while (!slot.classList.contains("ready")) { await wait(200); if (!isCurrent(run)) return; }
   slot.classList.add("knock");
-  slot.querySelector(".ask-bubble").textContent = "똑똑, 교수님! 저도 면담할 수 있을까요?";
+  slot.querySelector(".ask-bubble").textContent = HINT_LINES[pick.number] || HINT_DEFAULT;
 }
 
 // 선택 창
