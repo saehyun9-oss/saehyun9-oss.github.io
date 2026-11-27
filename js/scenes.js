@@ -44,7 +44,7 @@ function buildCards() {
     const id = pad2(s.number);
     // 슬롯머신 릴: 다른 학생 카드 12장 + 맨 끝에 이 학생
     const others = CARDS_DATA.students.map((x) => x.number).filter((n) => n !== s.number).sort(() => Math.random() - 0.5);
-    const reel = others.slice(0, 12).concat([s.number])
+    const reel = others.slice(0, 6).concat([s.number])
       .map((n) => `<img src="${A}cards/photo/${pad2(n)}.webp" alt="">`).join("");
     // 빨간 선이 그려지는 길 (시작점 + 성적 4점)
     const d = s.path_points.map((p, i) => (i ? "L" : "M") + p.x + " " + p.y).join(" ");
@@ -112,6 +112,9 @@ async function revealCard(slot) {
   strip.classList.add("spinning");
   strip.style.transform = `translateY(${-(strip.children.length - 1) * 560}px)`;
   await wait(1900);
+  strip.classList.remove("spinning");
+  strip.style.transform = "none";
+  strip.replaceChildren(strip.lastElementChild);
   // ② 성적 4단계: 선이 그 점까지 → 도장 '쾅'
   for (let i = 0; i < s.stages.length; i++) {
     path.style.strokeDashoffset = L_minus(s, i);
