@@ -453,7 +453,7 @@ const scene8 = (el, run) => hallwayWalk(el, run, -290, 1456, 9);
 /* =========================================================
    영상 + 말풍선 (Scene7·9 공통)
    ========================================================= */
-async function playVideo(el, run, src, speechHTML, speechAt = 900) {
+async function playVideo(el, run, src, speechHTML, speechAt = 900, hideAt = null) {
   const v = html(`<video class="full" src="${src}" muted playsinline preload="auto" style="object-fit:cover"></video>`);
   el.appendChild(v);
   await new Promise((r) => { v.oncanplay = r; v.onerror = r; setTimeout(r, 4000); });
@@ -465,6 +465,10 @@ async function playVideo(el, run, src, speechHTML, speechAt = 900) {
   sp.style.opacity = 0;
   el.appendChild(sp);
   show(sp, 400);
+    if (hideAt !== null) {
+    const check = () => { if (v.currentTime >= hideAt) { v.removeEventListener("timeupdate", check); hide(sp, 400); } };
+    v.addEventListener("timeupdate", check);
+  }
   await ended;
   await waitClick(200);
 }
@@ -477,7 +481,7 @@ async function scene7(el, run) {
   await playVideo(el, run, A + "video/s7.mp4",
     `<div class="speech tail-right" style="left:40px;top:28px;max-width:600px">
        <span class="who">학과장님</span>옆 연구실 교수는 AI 잘 써서 벌써 이번 주 일을 끝냈는데, 자네는 뭔가!
-     </div>`);
+     </div>`, 900, 4.2);
   if (!isCurrent(run)) return;
   await fadeToBlack();
   goToScene(8);
@@ -868,16 +872,14 @@ async function scene12(el, run) {
     html(`<div class="end-text">
         <p class="when">몇 년 뒤,</p>
         <h1>배울 시간조차<br>없었던 후회</h1>
-        <p class="tag">A 엔딩</p>
         <button class="btn" id="restart">처음부터 다시</button>
       </div>`)
   );
   await fadeFromBlack(2000);
   await wait(500);
-  const [when, h1, tag, btn] = [".when", "h1", ".tag", ".btn"].map((s) => $(s, el));
+  const [when, h1, btn] = [".when", "h1", ".btn"].map((s) => $(s, el));
   await show(when, 1000); await wait(900);
-  await show(h1, 1400); await wait(600);
-  await show(tag, 800); await wait(800);
+  await show(h1, 1400); await wait(1400);
   await show(btn, 800);
   btn.onclick = () => (location.href = location.pathname);
 }
