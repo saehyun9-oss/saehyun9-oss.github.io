@@ -146,7 +146,7 @@ body, button, input { font-family: "Pretendard", sans-serif; }
 .card-slot.ready:not(.done) { cursor: pointer; }
 .card-slot.ready:not(.done):hover { transform: scale(1.05); z-index: 5; }
 .ask-bubble {
-  position: absolute; right: 24px; top: -64px; padding: 12px 24px; white-space: nowrap;
+  position: absolute; right: 24px; bottom: calc(100% + 10px); padding: 12px 24px; white-space: nowrap;
   font-size: 22px; font-weight: 600; color: var(--ink); background: var(--paper);
   border: 3px solid var(--ink); border-radius: var(--wobbly); box-shadow: 3px 4px 0 rgba(0,0,0,.25);
   opacity: 0; transform: translateY(8px) rotate(-1.5deg); transition: opacity .2s, transform .2s;
