@@ -132,7 +132,7 @@ class Walker {
     this.height = height;
     this.width = (this.cfg.frameW * height) / this.cfg.frameH;
     this.step = (this.cfg.ppf * height) / this.cfg.frameH;
-    this.ms = ms || this.cfg.ms;
+    this.ms = (ms || this.cfg.ms) / (key === "prof" || key === "rival" ? 2 : 1.25);
     this.x = x;
     // 그림 한 장(sprite sheet)에서 지금 프레임만 보이게 잘라 보여 줘요
     this.el = document.createElement("div");
