@@ -382,3 +382,16 @@ body, button, input { font-family: "Pretendard", sans-serif; }
   position: absolute; inset: 0; display: flex; flex-direction: column; gap: 32px;
   align-items: center; justify-content: center; color: #888; font-size: 32px;
 }
+/* 휴대폰 대응: 당겨서 새로고침 막기, 무대 고정, 무거운 흐림 효과 끄기 */
+html, body { overscroll-behavior: none; }
+#stage { position: fixed; }
+.s2-scroll { overscroll-behavior: contain; }
+@media (pointer: coarse) {
+  .reel-strip.spinning { animation: none; }
+}
+/* 힌트 말풍선: 긴 대사는 두 줄로, 카드 위쪽으로 늘어나게 */
+.card-slot.knock .ask-bubble {
+  top: auto; bottom: calc(100% + 10px);
+  white-space: normal; word-break: keep-all;
+  width: max-content; max-width: 520px; line-height: 1.45;
+}
