@@ -276,26 +276,17 @@ async function scene4(el, run) {
   await preload([A + "bg/mint.jpg", A + "chars/prof/seated.webp", A + "furniture/desk_side.webp"]);
   buildOffice(el);
 
-  // 구름: 바깥 먹선 원(조금 큼) 위에 종이색 원을 겹쳐서 테두리만 남겨요
-  const cloud = [[450,285,92],[530,200,100],[650,165,112],[775,190,104],[858,262,92],[800,350,98],[660,385,106],[520,365,98],[430,330,60]];
-  const ink = cloud.map(([x,y,r]) => `<circle cx="${x}" cy="${y}" r="${r + 5}"/>`).join("");
-  const fill = cloud.map(([x,y,r]) => `<circle cx="${x}" cy="${y}" r="${r}"/>`).join("");
-  const trail = [[1150,180,11],[1102,158,17],[1040,140,25]]
-    .map(([x,y,r]) => `<g class="puff"><circle cx="${x}" cy="${y}" r="${r + 4}" fill="#2b2925"/><circle cx="${x}" cy="${y}" r="${r}" fill="#fbf8f0"/></g>`).join("");
-  const svg = html(`<svg class="thought" viewBox="0 0 1456 816">
-      ${trail}
-      <g class="puff big"><g fill="#2b2925">${ink}</g><g fill="#fbf8f0">${fill}<ellipse cx="650" cy="278" rx="250" ry="140"/></g></g>
-    </svg>`);
-  const box = html(`<div class="thought-text"><div></div></div>`);
-  const text = box.firstElementChild;
-  el.append(svg, box);
+  // 생각 말풍선 (Scene3 면담 말풍선과 같은 디자인)
+  const bubble = html(`<div class="bubble prof think"><span class="who">교수</span><p></p></div>`);
+  el.appendChild(bubble);
+  const text = bubble.querySelector("p");
 
   await fadeFromBlack(1000);
   await wait(600);
-  for (const p of svg.querySelectorAll(".puff")) { p.classList.add("on"); await wait(300); }
-  await wait(350);
+  bubble.classList.add("on");
+  await wait(450);
   await typeText(text, "AI가 정말 그렇게 심각하다고?", 60);
-  text.innerHTML += "<br>";
+  text.appendChild(document.createElement("br"));
   const second = document.createElement("span");
   text.appendChild(second);
   await typeText(second, "검색해볼까?", 70);
@@ -465,7 +456,8 @@ async function playVideo(el, run, src, speechHTML, speechAt = 900, hideAt = null
   sp.style.opacity = 0;
   el.appendChild(sp);
   show(sp, 400);
-    if (hideAt !== null) {
+  // hideAt(영상 몇 초)이 정해져 있으면 그때 말풍선이 사라져요
+  if (hideAt !== null) {
     const check = () => { if (v.currentTime >= hideAt) { v.removeEventListener("timeupdate", check); hide(sp, 400); } };
     v.addEventListener("timeupdate", check);
   }
@@ -481,7 +473,7 @@ async function scene7(el, run) {
   await playVideo(el, run, A + "video/s7.mp4",
     `<div class="speech tail-right" style="left:40px;top:28px;max-width:600px">
        <span class="who">학과장님</span>옆 연구실 교수는 AI 잘 써서 벌써 이번 주 일을 끝냈는데, 자네는 뭔가!
-     </div>`, 900, 4.2);
+     </div>`, 900, 4.2);   // 0.9초에 나타나고, 학과장님이 다시 앉는 4.2초에 사라져요
   if (!isCurrent(run)) return;
   await fadeToBlack();
   goToScene(8);
@@ -871,15 +863,20 @@ async function scene12(el, run) {
     html(`<img class="full" src="${A}bg/regret.jpg" alt="몇 년 뒤, 후회하는 교수">`),
     html(`<div class="end-text">
         <p class="when">몇 년 뒤,</p>
-        <h1>배울 시간조차<br>없었던 후회</h1>
+        <h1>배울 시간이 없다고<br>넘긴 과거가<br>너무 후회된다...</h1>
         <button class="btn" id="restart">처음부터 다시</button>
+      </div>`),
+    // 교수 왼쪽 말풍선
+    html(`<div class="speech tail-top-right end-speech">
+        <span class="who">교수</span>그때, 내가 AI를 무시하지도, 시간 빈곤이 있던 학생들을 무시하지도 않았더라면...
       </div>`)
   );
   await fadeFromBlack(2000);
   await wait(500);
-  const [when, h1, btn] = [".when", "h1", ".btn"].map((s) => $(s, el));
+  const [when, h1, btn, speech] = [".when", "h1", ".btn", ".end-speech"].map((s) => $(s, el));
   await show(when, 1000); await wait(900);
-  await show(h1, 1400); await wait(1400);
+  await show(h1, 1400); await wait(1200);
+  await show(speech, 900); await wait(2600);
   await show(btn, 800);
   btn.onclick = () => (location.href = location.pathname);
 }
